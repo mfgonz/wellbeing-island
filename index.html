@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Isla de Bienestar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sky-top:#CFEFFA;
+    --sky-bot:#EAF8F0;
+    --sea:#8FD3E8;
+    --sea-deep:#6FBFDA;
+    --grass:#9BD98A;
+    --grass-deep:#6FBE73;
+    --sand:#F5E4B8;
+    --sand-deep:#EAD08F;
+    --wood:#B08356;
+    --wood-dark:#7A5738;
+    --pink:#F5AFCB;
+    --coral:#F2966B;
+    --sun:#FBC94C;
+    --ink:#4A3B2A;
+    --ink-soft:#7A6B57;
+    --paper:#FFFCF4;
+    --paper-2:#FBF3DE;
+    --line:rgba(74,59,42,0.14);
+    --shadow: 0 4px 0 rgba(122,87,56,0.18), 0 6px 16px rgba(122,87,56,0.10);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bot) 400px, #F5F1E2 400px);
+    color:var(--ink);
+    font-family:'Nunito',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:70px;
+  }
+  .display{font-family:'Baloo 2',sans-serif; font-weight:700;}
+  a{color:inherit;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    max-width:920px; margin:0 auto; padding:22px 16px 6px; position:relative;
+  }
+  .hero-top{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;
+  }
+  .greet-bubble{
+    background:var(--paper); border-radius:20px; padding:14px 18px;
+    box-shadow:var(--shadow); position:relative; max-width:420px;
+    border:2px solid #fff;
+  }
+  .greet-bubble::after{
+    content:""; position:absolute; left:26px; bottom:-9px;
+    width:18px; height:18px; background:var(--paper);
+    clip-path:polygon(0 0, 100% 0, 0 100%); border-bottom:2px solid transparent;
+  }
+  .greet-eyebrow{font-size:11.5px; color:var(--ink-soft); font-weight:700; text-transform:uppercase; letter-spacing:0.06em;}
+  .greet-title{font-family:'Baloo 2',sans-serif; font-size:clamp(24px,6vw,32px); margin:4px 0 3px; color:var(--wood-dark); line-height:1.05;}
+  .greet-sub{font-size:13px; color:var(--ink-soft); line-height:1.5;}
+
+  .day-chip{
+    background:var(--sun); border-radius:16px; padding:10px 16px; text-align:center;
+    box-shadow:var(--shadow); flex-shrink:0; border:2px solid #fff;
+  }
+  .day-chip .dnum{font-family:'Baloo 2',sans-serif; font-size:28px; color:var(--wood-dark); line-height:1;}
+  .day-chip .dlbl{font-size:10px; font-weight:700; color:var(--wood-dark); text-transform:uppercase; letter-spacing:0.06em; opacity:0.75;}
+
+  .hud{
+    display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px;
+  }
+  .hud-card{
+    background:var(--paper); border-radius:16px; padding:12px 14px;
+    box-shadow:var(--shadow); border:2px solid #fff;
+  }
+  .hud-label{font-size:11px; font-weight:800; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.05em;}
+  .rank-name{font-family:'Baloo 2',sans-serif; font-size:16px; color:var(--wood-dark); margin-top:2px;}
+  .leaf-bar-track{height:10px; border-radius:8px; background:var(--paper-2); margin-top:8px; overflow:hidden; border:1px solid var(--line);}
+  .leaf-bar-fill{height:100%; background:linear-gradient(90deg,var(--grass-deep),var(--grass)); border-radius:8px; transition:width .5s ease;}
+  .leaf-text{font-size:11px; color:var(--ink-soft); margin-top:4px; font-weight:700;}
+
+  .streak-row{display:flex; align-items:center; gap:8px; margin-top:2px;}
+  .streak-num{font-family:'Baloo 2',sans-serif; font-size:24px; color:var(--coral);}
+  .stamps{display:flex; gap:4px; margin-top:8px;}
+  .stamp{
+    width:20px; height:20px; border-radius:50%; background:var(--paper-2);
+    display:flex; align-items:center; justify-content:center; font-size:11px;
+    border:1.5px solid var(--line); flex-shrink:0;
+  }
+  .stamp.on{background:var(--sun); border-color:var(--sun);}
+
+  /* ---------- WRAP / SECTIONS ---------- */
+  .wrap{max-width:920px; margin:0 auto; padding:20px 16px 0;}
+  .section{margin-bottom:24px;}
+  .section-head{display:flex; align-items:center; gap:8px; margin-bottom:10px;}
+  .section-icon{font-size:20px;}
+  .section-title{font-family:'Baloo 2',sans-serif; font-size:20px; color:var(--wood-dark);}
+  .section-note{font-size:12.5px; color:var(--ink-soft); margin:-4px 0 12px; line-height:1.5;}
+
+  .card{
+    background:var(--paper); border-radius:18px; padding:16px;
+    box-shadow:var(--shadow); border:2px solid #fff;
+  }
+
+  /* ---------- ISLAND ---------- */
+  .island-card{padding:0; overflow:hidden; border-radius:20px;}
+  .island-scene{
+    position:relative; height:230px;
+    background:linear-gradient(180deg, var(--sky-top) 0%, var(--sea) 60%, var(--sea-deep) 100%);
+    overflow:hidden;
+  }
+  .island-scene::before{ /* clouds */
+    content:"☁️ ☁️"; position:absolute; top:10px; left:20px; font-size:20px; opacity:0.7;
+  }
+  .island-land{
+    position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+    width:88%; height:140px;
+    background:var(--sand); border-radius:50% 50% 45% 45% / 60% 60% 40% 40%;
+  }
+  .island-land::before{
+    content:""; position:absolute; top:-18px; left:5%; width:90%; height:70px;
+    background:var(--grass); border-radius:50%;
+  }
+  .decor{
+    position:absolute; font-size:22px; opacity:0; transform:scale(0.4) translateY(6px);
+    transition:all .5s cubic-bezier(.34,1.56,.64,1); filter:drop-shadow(0 2px 2px rgba(0,0,0,0.15));
+  }
+  .decor.show{opacity:1; transform:scale(1) translateY(0);}
+  .island-caption{
+    padding:12px 16px; font-size:12.5px; color:var(--ink-soft); text-align:center; background:var(--paper);
+  }
+  .island-caption b{color:var(--wood-dark);}
+
+  /* ---------- TASKS ---------- */
+  .tasks-grid{display:grid; grid-template-columns:1fr; gap:9px;}
+  .task{
+    display:flex; align-items:center; gap:12px;
+    background:var(--paper-2); border:2px solid transparent; border-radius:14px;
+    padding:11px 13px; cursor:pointer; user-select:none;
+    transition:transform .15s ease, background .15s ease, border-color .15s ease;
+  }
+  .task:active{transform:scale(0.98);}
+  .task.checked{background:#E8F5E2; border-color:var(--grass-deep);}
+  .task-icon{
+    width:38px; height:38px; border-radius:50%; background:#fff; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:19px;
+    box-shadow:0 2px 0 rgba(122,87,56,0.15);
+  }
+  .task.checked .task-icon{background:var(--grass-deep);}
+  .task-body{flex:1; min-width:0;}
+  .task-title{font-weight:800; font-size:14.5px; color:var(--wood-dark);}
+  .task-sub{font-size:11.5px; color:var(--ink-soft); margin-top:1px;}
+  .task-leaf{font-size:12px; color:var(--grass-deep); font-weight:800; flex-shrink:0;}
+
+  .day-complete-banner{
+    margin-top:10px; text-align:center; font-weight:800; font-size:12.5px;
+    color:var(--wood-dark); background:var(--sun); border-radius:12px; padding:9px;
+    display:none;
+  }
+  .day-complete-banner.show{display:block;}
+
+  /* ---------- WEEKLY BOARD ---------- */
+  .week-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px;}
+  .day-tile{
+    background:var(--wood); color:#fff; border-radius:12px; padding:9px 4px;
+    text-align:center; cursor:pointer; border:2px solid transparent;
+  }
+  .day-tile.today{border-color:var(--sun); background:var(--wood-dark);}
+  .day-tile .dname{font-size:10px; font-weight:800; opacity:0.85; letter-spacing:0.03em;}
+  .day-tile .dicon{font-size:19px; margin:3px 0 1px;}
+  .day-tile .ddur{font-size:9px; opacity:0.8;}
+  .recipe-panel{
+    margin-top:12px; background:var(--paper-2); border:2px dashed var(--sand-deep);
+    border-radius:14px; padding:13px 15px; font-size:13px; display:none; position:relative;
+  }
+  .recipe-panel.show{display:block;}
+  .recipe-panel h4{margin:0 0 8px; font-family:'Baloo 2',sans-serif; font-size:15px; color:var(--wood-dark);}
+  .recipe-panel ul{margin:0; padding-left:18px; line-height:1.75;}
+  .close-recipe{
+    position:absolute; top:10px; right:12px; font-size:11px; font-weight:800;
+    color:var(--coral); cursor:pointer;
+  }
+
+  /* ---------- VIDEOTECA ---------- */
+  .video-grid{display:grid; grid-template-columns:1fr; gap:8px;}
+  @media(min-width:640px){.video-grid{grid-template-columns:1fr 1fr;}}
+  .video-card{
+    display:flex; align-items:center; gap:11px; background:var(--paper-2);
+    border-radius:14px; padding:10px 12px; text-decoration:none; color:var(--ink);
+    border:2px solid transparent; transition:border-color .15s ease, transform .15s ease;
+  }
+  .video-card:hover{border-color:var(--sun); transform:translateY(-1px);}
+  .video-play{
+    width:36px; height:36px; border-radius:50%; background:var(--coral); flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px;
+    box-shadow:0 2px 0 rgba(122,87,56,0.2);
+  }
+  .video-info{flex:1; min-width:0;}
+  .video-name{font-weight:800; font-size:13.5px; color:var(--wood-dark);}
+  .video-cue{font-size:11px; color:var(--ink-soft); margin-top:1px;}
+  .video-group-label{
+    font-family:'Baloo 2',sans-serif; font-size:14px; color:var(--wood-dark);
+    margin:16px 0 8px; display:flex; align-items:center; gap:6px;
+  }
+  .video-group-label:first-child{margin-top:0;}
+
+  /* ---------- RECETARIO ---------- */
+  .recipe-block{
+    background:var(--paper-2); border-radius:16px; padding:14px 16px; margin-bottom:12px;
+  }
+  .recipe-block h5{margin:0 0 8px; font-family:'Baloo 2',sans-serif; font-size:16px; color:var(--wood-dark); display:flex; align-items:center; gap:7px;}
+  .recipe-macros{display:inline-block; font-size:10.5px; font-weight:800; color:#fff; background:var(--grass-deep); padding:2px 9px; border-radius:10px; margin-left:6px; vertical-align:middle;}
+  .recipe-table{width:100%; border-collapse:collapse; font-size:12.5px; margin-top:6px;}
+  .recipe-table td{padding:4px 6px 4px 0; vertical-align:top;}
+  .recipe-table td:first-child{width:60%; color:var(--ink);}
+  .recipe-table td:last-child{font-weight:800; color:var(--wood-dark); text-align:right; white-space:nowrap;}
+  .recipe-steps{font-size:12px; color:var(--ink-soft); margin-top:8px; padding-top:8px; border-top:1px dashed var(--sand-deep); line-height:1.6;}
+  .meal-tabs{display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap;}
+  .meal-tab{
+    font-size:12px; font-weight:800; padding:7px 14px; border-radius:20px; cursor:pointer;
+    background:var(--paper-2); color:var(--ink-soft); border:2px solid transparent;
+  }
+  .meal-tab.active{background:var(--wood); color:#fff;}
+  .meal-panel{display:none;}
+  .meal-panel.show{display:block;}
+
+  /* ---------- HUERTO / PLATE ---------- */
+  .plate-wrap{display:flex; gap:18px; align-items:center; flex-wrap:wrap;}
+  .plate{
+    width:150px; height:150px; border-radius:50%; flex-shrink:0;
+    background:conic-gradient(var(--grass-deep) 0deg 180deg, var(--sun) 180deg 270deg, var(--coral) 270deg 360deg);
+    border:6px solid #fff; box-shadow:0 0 0 2px var(--line);
+  }
+  .plate-legend{flex:1; min-width:180px; font-size:13px; line-height:2;}
+  .dot{display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:7px; vertical-align:middle;}
+
+  .menu-cols{display:grid; grid-template-columns:1fr; gap:10px; margin-top:14px;}
+  @media(min-width:640px){.menu-cols{grid-template-columns:1fr 1fr 1fr;}}
+  .menu-col{background:var(--paper-2); border-radius:14px; padding:12px 14px;}
+  .menu-col h5{margin:0 0 6px; font-family:'Baloo 2',sans-serif; font-size:13.5px; color:var(--wood-dark);}
+  .menu-col ul{margin:0; padding-left:16px; font-size:12.5px; line-height:1.65;}
+
+  .basket-box{
+    margin-top:14px; background:var(--wood); color:#fff; border-radius:14px; padding:13px 15px;
+  }
+  .basket-box h5{margin:0 0 8px; font-family:'Baloo 2',sans-serif; font-size:15px;}
+  .basket-box ul{margin:0; padding-left:16px; font-size:12.5px; line-height:1.8; opacity:0.95;}
+
+  .tip-strip{margin-top:12px; font-size:12px; background:var(--paper-2); padding:11px 13px; border-radius:12px; line-height:1.6;}
+
+  /* ---------- PROGRESO / DIARIO ---------- */
+  .measure-form{display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:14px;}
+  @media(min-width:520px){.measure-form{grid-template-columns:repeat(4,1fr);}}
+  .measure-form label{display:block; font-size:10.5px; font-weight:800; text-transform:uppercase; color:var(--ink-soft); margin-bottom:3px;}
+  .measure-form input{
+    width:100%; padding:9px 10px; border:2px solid var(--line); border-radius:10px;
+    font-family:'Nunito',sans-serif; font-weight:700; font-size:13px; background:var(--paper-2); color:var(--ink);
+  }
+  .btn{
+    display:inline-block; background:var(--coral); color:#fff; border:none;
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:13px;
+    padding:11px 18px; border-radius:12px; cursor:pointer;
+    box-shadow:0 3px 0 rgba(122,87,56,0.25);
+  }
+  .btn.secondary{background:var(--grass-deep);}
+  .btn.ghost{background:#fff; color:var(--wood-dark); border:2px solid var(--line); box-shadow:none;}
+
+  .chart-box{margin-top:16px;}
+  .chart-legend{display:flex; gap:16px; font-size:12px; margin-bottom:6px; font-weight:700; color:var(--ink-soft);}
+
+  .chest-table{margin-top:16px; width:100%; border-collapse:separate; border-spacing:0 6px; font-size:12.5px;}
+  .chest-table td, .chest-table th{padding:8px 10px;}
+  .chest-table th{font-size:10px; text-transform:uppercase; color:var(--ink-soft); text-align:left; font-weight:800;}
+  .chest-table tr.row{background:var(--paper-2); border-radius:10px;}
+  .chest-table tr.row td:first-child{border-radius:10px 0 0 10px;}
+  .chest-table tr.row td:last-child{border-radius:0 10px 10px 0;}
+  .chest-table tr.hit{background:#E8F5E2;}
+  .chest-table tr.hit td{color:var(--grass-deep); font-weight:800;}
+
+  /* ---------- TEMPORADA / ROADMAP ---------- */
+  .season-grid{display:grid; grid-template-columns:1fr; gap:10px;}
+  @media(min-width:640px){.season-grid{grid-template-columns:1fr 1fr 1fr;}}
+  .season-card{
+    border-radius:16px; padding:14px; border:2px solid var(--line); position:relative; background:var(--paper-2);
+  }
+  .season-card.active{background:var(--grass-deep); color:#fff; border-color:var(--grass-deep);}
+  .season-eyebrow{font-size:10.5px; font-weight:800; text-transform:uppercase; opacity:0.65; letter-spacing:0.05em;}
+  .season-card.active .season-eyebrow{opacity:0.9;}
+  .season-title{font-family:'Baloo 2',sans-serif; font-size:17px; margin:3px 0 6px;}
+  .season-desc{font-size:12px; line-height:1.55; opacity:0.9;}
+  .season-badge{
+    position:absolute; top:10px; right:10px; font-size:9.5px;
+    background:var(--sun); color:var(--wood-dark); padding:2px 8px; border-radius:10px; font-weight:800;
+  }
+
+  /* ---------- MEDALLAS ---------- */
+  .badge-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(94px,1fr)); gap:10px; margin-top:14px;}
+  .badge{
+    text-align:center; padding:12px 6px; border-radius:14px; background:var(--paper-2);
+    border:2px solid var(--line); opacity:0.35; filter:grayscale(1);
+  }
+  .badge.unlocked{opacity:1; filter:none; background:#fff; border-color:var(--sun);}
+  .badge .b-icon{font-size:24px;}
+  .badge .b-name{font-size:10px; font-weight:800; margin-top:5px; line-height:1.3; color:var(--wood-dark);}
+
+  /* ---------- MÉDICO ---------- */
+  .med-list{display:grid; grid-template-columns:1fr; gap:7px;}
+  @media(min-width:640px){.med-list{grid-template-columns:1fr 1fr;}}
+  .med-item{display:flex; gap:9px; align-items:flex-start; font-size:13px; padding:10px 11px; background:var(--paper-2); border-radius:12px; cursor:pointer;}
+  .med-check{width:18px; height:18px; border:2px solid var(--wood); border-radius:6px; flex-shrink:0; margin-top:1px; position:relative; background:#fff;}
+  .med-item.checked .med-check{background:var(--grass-deep); border-color:var(--grass-deep);}
+  .med-item.checked .med-check::after{content:"✓"; position:absolute; inset:0; color:#fff; font-size:12px; display:flex; align-items:center; justify-content:center; font-weight:800;}
+  .med-item.checked .med-text{text-decoration:line-through; opacity:0.55;}
+
+  footer{
+    max-width:920px; margin:26px auto 0; padding:16px; text-align:center;
+    font-size:11px; color:var(--ink-soft); line-height:1.6;
+  }
+  .settings-row{display:flex; gap:8px; justify-content:center; margin-top:8px; flex-wrap:wrap;}
+
+  .toast{
+    position:fixed; bottom:18px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--wood-dark); color:#FFF6E0; font-weight:700;
+    font-size:12.5px; padding:10px 18px; border-radius:20px; opacity:0; pointer-events:none;
+    transition:all .3s ease; z-index:50; white-space:nowrap; box-shadow:0 4px 12px rgba(0,0,0,0.2);
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  .reset-overlay{
+    position:fixed; inset:0; background:rgba(74,59,42,0.45);
+    display:none; align-items:center; justify-content:center; z-index:80; padding:20px;
+  }
+  .reset-overlay.show{display:flex;}
+  .reset-modal{
+    background:var(--paper); border-radius:20px; padding:24px 22px; max-width:320px;
+    text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.25); border:2px solid #fff;
+  }
+
+  #loading{
+    position:fixed; inset:0; background:linear-gradient(180deg,var(--sky-top),var(--sky-bot));
+    z-index:100; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px;
+  }
+  #loading .display{font-size:20px; color:var(--wood-dark);}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div style="font-size:34px;">🌴</div>
+  <div class="display">Preparando tu isla…</div>
+</div>
+
+<div id="app" style="display:none;">
+
+<div class="hero">
+  <div class="hero-top">
+    <div class="greet-bubble">
+      <div class="greet-eyebrow">Mi isla de bienestar</div>
+      <div class="greet-title">¡Buenos días! 🌤️</div>
+      <div class="greet-sub">180 días para cultivar hábitos, no para castigarte. Cada tarea que completas hace crecer tu isla — poquito a poquito.</div>
+    </div>
+    <div class="day-chip">
+      <div class="dnum display" id="dayNum">1</div>
+      <div class="dlbl">de 180</div>
+    </div>
+  </div>
+
+  <div class="hud">
+    <div class="hud-card">
+      <div class="hud-label">Rango de residente</div>
+      <div class="rank-name" id="rankName">Novata de la Isla</div>
+      <div class="leaf-bar-track"><div class="leaf-bar-fill" id="leafFill" style="width:0%"></div></div>
+      <div class="leaf-text" id="leafText">0 / 150 🍃 hojas</div>
+    </div>
+    <div class="hud-card">
+      <div class="hud-label">Racha de visitas</div>
+      <div class="streak-row">
+        <span style="font-size:20px;">🔥</span>
+        <span class="streak-num" id="streakNum">0</span>
+        <span style="font-size:12px; color:var(--ink-soft); font-weight:700;">días</span>
+      </div>
+      <div class="stamps" id="stamps"></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ISLA (signature visual) -->
+  <section class="section" id="island">
+    <div class="section-head"><span class="section-icon">🏝️</span><span class="section-title display">Tu isla</span></div>
+    <div class="section-note">Tu isla crece con cada medalla que desbloqueas más abajo. Vuelve seguido a ver cómo florece.</div>
+    <div class="card island-card">
+      <div class="island-scene" id="islandScene">
+        <div class="island-land"></div>
+      </div>
+      <div class="island-caption" id="islandCaption">Tu isla apenas está despertando. Completa tu primera tarea para plantar la primera semilla 🌱</div>
+    </div>
+  </section>
+
+  <!-- TAREAS DE HOY -->
+  <section class="section" id="today">
+    <div class="section-head"><span class="section-icon">✅</span><span class="section-title display">Tareas de la isla de hoy</span></div>
+    <div class="section-note">No necesitas las 5 — marca lo que hagas hoy. 3 de 5 ya cuenta como día completo en la isla.</div>
+    <div class="card">
+      <div class="tasks-grid" id="tasksGrid"></div>
+      <div class="day-complete-banner" id="dayBanner">🌟 ¡Día completo en la isla! +20 hojas bonus</div>
+    </div>
+  </section>
+
+  <!-- ACTIVIDADES DE LA SEMANA -->
+  <section class="section" id="week">
+    <div class="section-head"><span class="section-icon">📅</span><span class="section-title display">Actividades de la semana</span></div>
+    <div class="section-note">Mínimo no negociable: 2× fuerza + 3× cardio suave (~100–150 min/semana). Progresa hacia 150–300 min cuando puedas.</div>
+    <div class="card">
+      <div class="week-grid" id="weekGrid"></div>
+      <div class="recipe-panel" id="recipePanel"></div>
+    </div>
+  </section>
+
+  <!-- VIDEOTECA -->
+  <section class="section" id="videoteca">
+    <div class="section-head"><span class="section-icon">🎥</span><span class="section-title display">Videoteca de movimientos</span></div>
+    <div class="section-note">Un video vale más que mil instrucciones. Prioriza técnica sobre peso — mira el video antes de tu primera vez con cada ejercicio.</div>
+    <div class="card">
+
+      <div class="video-group-label">🛠️ Receta A</div>
+      <div class="video-grid">
+        <a class="video-card" href="https://www.youtube.com/watch?v=I63oel2pBKM" target="_blank" rel="noopener">
+          <div class="video-play">▶</div>
+          <div class="video-info"><div class="video-name">Sentadilla a silla</div><div class="video-cue">baja controlada, rodillas no pasan la punta del pie</div></div>
+        </a>
+        <a class="video-card" href="https://rutinas.net/ejercicios/remo-sentado-con-banda-de-resistencia" target="_blank" rel="noopener">
+          <div class="video-play">▶</div>
+          <div class="video-info"><div class="video-name">Remo con liga</div><div class="video-cue">codos cerca del cuerpo, aprieta omóplatos</div></div>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=oDXM-a-gBt8" target="_blank" rel="noopener">
+          <div class="video-play">▶</div>
+          <div class="video-info"><div class="video-name">Puente de glúteos</div><div class="video-cue">aprieta glúteos arriba, no arquees la espalda</div></div>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/results?search_query=press+de+pecho+con+banda+de+resistencia+tutorial" target="_blank" rel="noopener">
+          <div class="video-play">▶</div>
+          <div class="video-info"><div class="video-name">Press de pecho con liga</div><div class="video-cue">exhala al empujar, no bloquees el codo con fuerza</div></div>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/shorts/yYBTJiLpYLQ" target="_blank" rel="noopener">
+          <div class="video-play">▶</div>
+          <div class="video-info"><div class="video-name">Peso muerto rumano con liga</div><div class="video-cue">bisagra de cadera, espalda recta, no redondees</div></div>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=d0atctiI7Vw" target="_blank" rel="noopener">
+          <div class="video-play">▶</div>
+          <div class="video-info"><div class="video-name">Plancha</div><div class="video-cue">cuerpo en línea recta, abdomen apretado</div></div>
+        </a>
+      </div>
+
+      <div class="video-group-label">🛠️ Receta B</div>
+      <div class="video-grid">
+        <a class="video-card" href="https://www.youtube.com/results?search_query=step+up+escalon+tutorial+tecnica" target="_blank" rel="noopener">
+          <div class="video-play">▶</div>
+          <div class="video-info"><div class="video-name">Step-up a escalón bajo</div><div class="video-cue">empuja con el talón, controla la bajada</div></div>
+        </a>
+        <a class="video-card" href="https://rutinas.net/ejercicios/remo-sentado-con-banda-de-resistencia" target="_blank" rel="noopener">
+          <div class="video-play">▶</div>
+          <div class="video-info"><div class="video-name">Remo con liga</div><div class="video-cue">mismo cue que en Receta A</div></div>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=oDXM-a-gBt8" target="_blank" rel="noopener">
+          <div class="video-play">▶</div>
+          <div class="video-info"><div class="video-name">Puente de glúteos</div><div class="video-cue">mismo cue que en Receta A</div></div>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/results?search_query=press+de+hombros+con+banda+de+resistencia+tutorial" target="_blank" rel="noopener">
+          <div class="video-play">▶</div>
+          <div class="video-info"><div class="video-name">Press de hombros con liga</div><div class="video-cue">no arquees la espalda baja al empujar arriba</div></div>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/results?search_query=bisagra+de+cadera+hip+hinge+tutorial+tecnica" target="_blank" rel="noopener">
+          <div class="video-play">▶</div>
+          <div class="video-info"><div class="video-name">Bisagra de cadera</div><div class="video-cue">la base de casi todo movimiento de glúteo/isquios</div></div>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=jdiE9CQDebo" target="_blank" rel="noopener">
+          <div class="video-play">▶</div>
+          <div class="video-info"><div class="video-name">Dead bug</div><div class="video-cue">espalda baja pegada al piso todo el tiempo</div></div>
+        </a>
+      </div>
+
+      <div class="video-group-label">🌊 Cardio y movilidad</div>
+      <div class="video-grid">
+        <a class="video-card" href="https://www.youtube.com/results?search_query=zona+2+cardio+como+saber+intensidad" target="_blank" rel="noopener">
+          <div class="video-play">▶</div>
+          <div class="video-info"><div class="video-name">Cómo saber si estás en "zona 2"</div><div class="video-cue">puedes hablar pero no cantar cómodamente</div></div>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/results?search_query=tecnica+basica+natacion+principiantes" target="_blank" rel="noopener">
+          <div class="video-play">▶</div>
+          <div class="video-info"><div class="video-name">Técnica básica de natación</div><div class="video-cue">respiración lateral relajada</div></div>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/results?search_query=boxeo+principiantes+combinaciones+basicas+costal" target="_blank" rel="noopener">
+          <div class="video-play">▶</div>
+          <div class="video-info"><div class="video-name">Boxeo — combinaciones básicas</div><div class="video-cue">jab-directo-gancho, con costal</div></div>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/results?search_query=yoga+20+minutos+principiantes+relajante" target="_blank" rel="noopener">
+          <div class="video-play">▶</div>
+          <div class="video-info"><div class="video-name">Yoga 20 min — principiantes</div><div class="video-cue">para tus días de descanso/movilidad</div></div>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- HUERTO -->
+  <section class="section" id="huerto">
+    <div class="section-head"><span class="section-icon">🌾</span><span class="section-title display">El huerto — tu plato base</span></div>
+    <div class="section-note">Comida real, panameña, sin sustitutos caros. Primero proteína + vegetales, después carbohidrato.</div>
+    <div class="card">
+      <div class="plate-wrap">
+        <div class="plate"></div>
+        <div class="plate-legend">
+          <div><span class="dot" style="background:var(--grass-deep);"></span>½ plato — vegetales (tomate, pepino, repollo, brócoli, espinaca, chayote…)</div>
+          <div><span class="dot" style="background:var(--coral);"></span>¼ plato — proteína (pollo, pescado, huevo, atún, sardinas, lentejas, frijoles)</div>
+          <div><span class="dot" style="background:var(--sun);"></span>¼ plato — carbohidrato (arroz, papa, yuca, ñame, plátano, avena)</div>
+          <div style="margin-top:6px; font-size:12px; opacity:0.7;">+ un poco de grasa: aguacate, aceite de oliva, maní</div>
+        </div>
+      </div>
+
+      <div class="menu-cols">
+        <div class="menu-col">
+          <h5>🌅 Desayuno</h5>
+          <ul>
+            <li>3 huevos + fruta + avena</li>
+            <li>2 huevos + pollo/pavo + fruta</li>
+            <li>Avena + huevos + fruta</li>
+          </ul>
+        </div>
+        <div class="menu-col">
+          <h5>☀️ Almuerzo</h5>
+          <ul>
+            <li>Pollo/pescado/carne</li>
+            <li>Arroz, papa, yuca o ñame</li>
+            <li>Ensalada o vegetales</li>
+          </ul>
+        </div>
+        <div class="menu-col">
+          <h5>🌙 Cena</h5>
+          <ul>
+            <li>Pescado/pollo/carne/huevos</li>
+            <li>Muchos vegetales</li>
+            <li>Porción pequeña de carbohidrato</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="basket-box">
+        <h5>🧺 Cesta de emergencia (ADHD-proof)</h5>
+        <ul>
+          <li>2–3 huevos + arroz + vegetales congelados</li>
+          <li>Atún + arroz + aguacate + tomate</li>
+          <li>Pollo rostizado + ensalada + papa</li>
+          <li>Sardinas + arroz + vegetales</li>
+          <li>Frijoles + huevo + arroz + ensalada</li>
+        </ul>
+      </div>
+
+      <div class="tip-strip">
+        <b>Meal prep:</b> cocina base 2×/semana (domingo y miércoles): proteína + arroz/papa + vegetales, luego solo ensamblas. &nbsp;·&nbsp;
+        <b>Hierro:</b> combina lentejas/espinaca/carne roja con vitamina C (tomate, pimentón, naranja, limón); evita café/té junto a esas comidas. &nbsp;·&nbsp;
+        <b>Insulina:</b> caminar 10–15 min después de comidas grandes ayuda al control glucémico.
+      </div>
+    </div>
+  </section>
+
+  <!-- RECETARIO -->
+  <section class="section" id="recetario">
+    <div class="section-head"><span class="section-icon">📖</span><span class="section-title display">Recetario de la isla — porciones exactas</span></div>
+    <div class="section-note">Cantidades pensadas para ~1550–1600 kcal/día repartidas en 3 comidas. Ajusta según hambre real; esto es un punto de partida, no una regla rígida.</div>
+
+    <div class="card">
+      <div class="meal-tabs" id="mealTabs"></div>
+      <div id="mealPanels"></div>
+    </div>
+  </section>
+
+  <!-- DIARIO DE CRECIMIENTO -->
+  <section class="section" id="progress">
+    <div class="section-head"><span class="section-icon">📔</span><span class="section-title display">Diario de crecimiento</span></div>
+    <div class="section-note">Registra cada 2–4 semanas, en condiciones similares. La báscula sola no cuenta la historia: mira peso + cintura + grasa + músculo juntos.</div>
+    <div class="card">
+      <div class="measure-form">
+        <div><label>Fecha</label><input type="date" id="mDate"></div>
+        <div><label>Peso (kg)</label><input type="number" step="0.1" id="mWeight" placeholder="94.4"></div>
+        <div><label>Cintura (cm)</label><input type="number" step="0.1" id="mWaist" placeholder="opcional"></div>
+        <div><label>% Grasa</label><input type="number" step="0.1" id="mFat" placeholder="opcional"></div>
+      </div>
+      <button class="btn" onclick="addMeasurement()">🌱 Registrar medición (+20 hojas)</button>
+
+      <div class="chart-box">
+        <div class="chart-legend"><span><span class="dot" style="background:var(--coral);"></span>Peso (kg)</span></div>
+        <svg id="chartSvg" width="100%" height="140" viewBox="0 0 600 140" preserveAspectRatio="none"></svg>
+      </div>
+
+      <table class="chest-table" id="chestTable">
+        <thead><tr><th>Meta</th><th>% pérdida</th><th>Peso aprox.</th><th>Estado</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- MAPA DE TEMPORADA -->
+  <section class="section" id="season">
+    <div class="section-head"><span class="section-icon">🗺️</span><span class="section-title display">Mapa de la temporada</span></div>
+    <div class="card">
+      <div class="season-grid" id="seasonGrid"></div>
+    </div>
+  </section>
+
+  <!-- MEDALLAS -->
+  <section class="section" id="badges">
+    <div class="section-head"><span class="section-icon">🎖️</span><span class="section-title display">Medallas de la isla</span></div>
+    <div class="card">
+      <div class="badge-grid" id="badgeGrid"></div>
+    </div>
+  </section>
+
+  <!-- MÉDICO -->
+  <section class="section" id="medical">
+    <div class="section-head"><span class="section-icon">🧭</span><span class="section-title display">Antes de zarpar — checklist médico</span></div>
+    <div class="section-note">Esto no da hojas. Es tu lista para llevar al médico/psiquiatra/nutricionista.</div>
+    <div class="card">
+      <div class="med-list" id="medList"></div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  Este dashboard es una herramienta de seguimiento personal, no reemplaza atención médica.<br>
+  Coordina cambios de dieta, ejercicio intenso, hierro y medicación con tu médico, psiquiatra y nutricionista.
+  <div class="settings-row">
+    <button class="btn ghost" onclick="exportData()">Exportar datos</button>
+    <button class="btn ghost" onclick="resetData()">Reiniciar isla</button>
+  </div>
+</footer>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="reset-overlay" id="resetOverlay">
+  <div class="reset-modal">
+    <div style="font-size:32px;">🏝️💧</div>
+    <div class="display" style="font-size:19px; color:var(--wood-dark); margin:8px 0 6px;">¿Reiniciar tu isla?</div>
+    <div style="font-size:13px; color:var(--ink-soft); line-height:1.5; margin-bottom:16px;">Esto borra tus hojas, rachas, medallas y mediciones guardadas. No se puede deshacer.</div>
+    <div style="display:flex; gap:8px; justify-content:center;">
+      <button class="btn ghost" onclick="cancelReset()">Cancelar</button>
+      <button class="btn" onclick="confirmReset()">Sí, reiniciar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'mi_isla_bienestar_state';
+
+const WEEK_PLAN = [
+  {d:'LUN', icon:'🛠️', name:'Fuerza — Receta A', dur:'30 min', routine:'A'},
+  {d:'MAR', icon:'🚲', name:'Bicicleta', dur:'30 min', routine:null},
+  {d:'MIÉ', icon:'👣', name:'Caminata', dur:'30 min', routine:null},
+  {d:'JUE', icon:'🛠️', name:'Fuerza — Receta B', dur:'30 min', routine:'B'},
+  {d:'VIE', icon:'🍃', name:'Descanso / Yoga', dur:'20 min', routine:null},
+  {d:'SÁB', icon:'🌊', name:'Piscina o bici', dur:'40–45 min', routine:null},
+  {d:'DOM', icon:'🌤️', name:'Caminata suave', dur:'20–30 min', routine:null},
+];
+
+const ROUTINES = {
+  A: {
+    title: '🛠️ Receta de movimiento A',
+    items: [
+      'Sentadilla a silla — 3 × 8–12',
+      'Remo con liga — 3 × 10–15',
+      'Puente de glúteos — 3 × 12–15',
+      'Press de pecho con liga — 3 × 8–12',
+      'Peso muerto rumano con liga — 3 × 8–12',
+      'Plancha — 2 × 20–40 seg',
+    ]
+  },
+  B: {
+    title: '🛠️ Receta de movimiento B',
+    items: [
+      'Step-up a escalón bajo — 3 × 8–10 por pierna',
+      'Remo con liga — 3 × 10–15',
+      'Puente de glúteos — 3 × 12–15',
+      'Press de hombros con liga — 3 × 8–12',
+      'Bisagra de cadera — 3 × 10–12',
+      'Dead bug — 2 × 8–12 por lado',
+    ]
+  }
+};
+
+const HABITS = [
+  {key:'protein', icon:'🍳', title:'Proteína en cada comida', sub:'20–40g por plato', xp:10},
+  {key:'water', icon:'💧', title:'Agua como bebida principal', sub:'evita sodas y jugos', xp:10},
+  {key:'walk', icon:'👣', title:'Caminar 10–15 min post-comida', sub:'ayuda al control de glucosa', xp:10},
+  {key:'strength', icon:'🌾', title:'Movimiento del día', sub:'según la semana', xp:10},
+  {key:'sleep', icon:'🌙', title:'Hora de dormir consistente', sub:'meta: 7–9 horas', xp:10},
+];
+
+const RANKS = [
+  'Novata de la Isla','Vecina Curiosa','Jardinera Dedicada',
+  'Guardiana de la Isla','Alcaldesa Honoraria','Leyenda de la Isla','Espíritu de la Isla'
+];
+const XP_PER_LEVEL = 150;
+
+const BADGE_DEFS = [
+  {id:'first_take', icon:'🌱', name:'Primera semilla', check: s => Object.keys(s.habitLog).length >= 1, decor:{emoji:'🌱', top:'62%', left:'20%'}},
+  {id:'streak3', icon:'🌼', name:'Racha × 3', check: s => computeStreak(s) >= 3, decor:{emoji:'🌼', top:'58%', left:'75%'}},
+  {id:'streak7', icon:'🌳', name:'Racha × 7', check: s => computeStreak(s) >= 7, decor:{emoji:'🌳', top:'32%', left:'14%'}},
+  {id:'streak14', icon:'🌻', name:'Racha × 14', check: s => computeStreak(s) >= 14, decor:{emoji:'🌻', top:'48%', left:'50%'}},
+  {id:'streak30', icon:'🌲', name:'Racha × 30', check: s => computeStreak(s) >= 30, decor:{emoji:'🌲', top:'22%', left:'80%'}},
+  {id:'first_measure', icon:'📮', name:'Primera medición', check: s => s.measurements.length >= 1, decor:{emoji:'📮', top:'66%', left:'45%'}},
+  {id:'m5', icon:'🏡', name:'Meta 5%', check: s => pctLoss(s) >= 5, decor:{emoji:'🏡', top:'28%', left:'42%'}},
+  {id:'m7', icon:'⛲', name:'Meta 7%', check: s => pctLoss(s) >= 7, decor:{emoji:'⛲', top:'52%', left:'28%'}},
+  {id:'m10', icon:'🌈', name:'Meta 10%', check: s => pctLoss(s) >= 10, decor:{emoji:'🌈', top:'16%', left:'55%'}},
+  {id:'phase2', icon:'🦋', name:'Cultivo iniciado', check: s => currentPhaseIndex(s) >= 1, decor:{emoji:'🦋', top:'38%', left:'66%'}},
+  {id:'phase3', icon:'🍎', name:'Cosecha', check: s => currentPhaseIndex(s) >= 2, decor:{emoji:'🍎', top:'56%', left:'60%'}},
+  {id:'medcheck', icon:'🧭', name:'Chequeo médico', check: s => Object.values(s.medicalChecklist).some(v=>v), decor:{emoji:'🧭', top:'70%', left:'68%'}},
+];
+
+const RECIPES = {
+  desayuno: {
+    label:'🌅 Desayuno', target:'≈350–400 kcal · 24–30g proteína',
+    items:[
+      {
+        name:'Huevos con espinaca y naranja', macro:'~24g prot.',
+        portions:[['Huevos grandes','3 unidades (150g)'],['Espinaca fresca','1 taza (30g)'],['Plátano verde cocido','½ unidad (100g)'],['Naranja','1 unidad (130g)']],
+        steps:'Saltea la espinaca 1 min en sartén con poco aceite. Agrega los huevos batidos, revuelve hasta cuajar. Sirve con el plátano cocido y la naranja aparte.'
+      },
+      {
+        name:'Avena con huevo y papaya', macro:'~22g prot.',
+        portions:[['Avena en hojuelas','½ taza (40g)'],['Agua o leche descremada','1 taza (240ml)'],['Huevos duros','2 unidades (100g)'],['Papaya picada','½ taza (75g)']],
+        steps:'Cocina la avena con el líquido 3–4 min. Sirve junto a los 2 huevos duros (cocínalos con anticipación, del meal-prep) y la papaya.'
+      },
+      {
+        name:'Pollo desmenuzado con huevo', macro:'~30g prot.',
+        portions:[['Pollo cocido desmenuzado','100g'],['Huevo','1 unidad'],['Vegetales salteados (pimentón/cebolla)','½ taza'],['Mandarina','1 unidad']],
+        steps:'Saltea los vegetales, agrega el pollo ya cocido (del meal-prep) a calentar, agrega el huevo batido al final y revuelve. Sirve con la mandarina.'
+      },
+    ]
+  },
+  almuerzo: {
+    label:'☀️ Almuerzo', target:'≈450–500 kcal · 35–40g proteína',
+    items:[
+      {
+        name:'Pollo guisado panameño', macro:'~38g prot.',
+        portions:[['Pechuga de pollo guisada','150g'],['Arroz blanco cocido','½ taza (90g)'],['Frijoles o lentejas cocidas','½ taza (90g)'],['Ensalada de repollo, tomate y pepino con limón','1 taza']],
+        steps:'Guisa el pollo con sofrito de cebolla, ajo, tomate y culantro. Sirve con arroz, frijoles y la ensalada fresca al lado.'
+      },
+      {
+        name:'Pescado a la plancha con ñame', macro:'~36g prot.',
+        portions:[['Corvina o filete de pescado','150g'],['Ñame o papa cocida','½ taza (100g)'],['Brócoli y zanahoria al vapor','1 taza']],
+        steps:'Sazona el pescado con limón, sal y ajo; cocina a la plancha 3–4 min por lado. Acompaña con el ñame cocido y los vegetales al vapor.'
+      },
+      {
+        name:'Carne molida magra con arroz integral', macro:'~34g prot.',
+        portions:[['Carne molida magra (90/10)','130g'],['Arroz integral cocido','½ taza (90g)'],['Ensalada grande mixta','1½ tazas']],
+        steps:'Dora la carne molida con cebolla, ajo y tomate picado. Sirve sobre el arroz integral con la ensalada al lado.'
+      },
+    ]
+  },
+  cena: {
+    label:'🌙 Cena', target:'≈350–400 kcal · 28–34g proteína',
+    items:[
+      {
+        name:'Lentejas guisadas con huevo', macro:'~30g prot.',
+        portions:[['Lentejas cocidas','1 taza (200g)'],['Huevo','1 unidad'],['Pimentón y tomate para el guiso','½ taza'],['Ensalada verde','1 taza']],
+        steps:'Guisa las lentejas con pimentón, tomate y cebolla. Sirve con un huevo frito o duro encima y ensalada verde.'
+      },
+      {
+        name:'Pescado al horno con plátano', macro:'~28g prot.',
+        portions:[['Filete de pescado','130g'],['Ensalada grande con aceite de oliva','1½ tazas'],['Plátano maduro horneado','¼ unidad (50g)']],
+        steps:'Hornea el pescado sazonado 15 min a 200°C. Sirve con ensalada aliñada y una porción pequeña de plátano horneado.'
+      },
+      {
+        name:'Sardinas con vegetales y aguacate', macro:'~26g prot.',
+        portions:[['Sardinas en agua o tomate','1 lata (120g)'],['Vegetales al vapor (chayote, zanahoria)','1 taza'],['Aguacate','½ unidad']],
+        steps:'Calienta las sardinas ligeramente o sírvelas frías. Acompaña con los vegetales al vapor y el aguacate.'
+      },
+    ]
+  },
+  snacks: {
+    label:'🍎 Snacks (solo si hay hambre real)', target:'≈120–160 kcal · 10–15g proteína',
+    items:[
+      {
+        name:'Yogur natural con fruta', macro:'~12g prot.',
+        portions:[['Yogur natural sin azúcar','1 taza (200g)'],['Fruta picada (piña, mango o papaya)','½ taza']],
+        steps:'Mezcla el yogur con la fruta picada. Sin azúcar añadida.'
+      },
+      {
+        name:'Huevo duro + fruta', macro:'~13g prot.',
+        portions:[['Huevos duros','2 unidades'],['Fruta pequeña (mandarina o manzana)','1 unidad']],
+        steps:'Ten huevos duros ya listos del meal-prep. Combina con una fruta.'
+      },
+      {
+        name:'Atún con pepino', macro:'~15g prot.',
+        portions:[['Atún en agua','1 lata pequeña (80g)'],['Pepino en rodajas','1 taza']],
+        steps:'Escurre el atún y sírvelo sobre las rodajas de pepino con limón.'
+      },
+    ]
+  }
+};
+
+let activeMealTab = 'desayuno';
+
+function renderRecipes(){
+  const tabsEl = document.getElementById('mealTabs');
+  const panelsEl = document.getElementById('mealPanels');
+  tabsEl.innerHTML = '';
+  panelsEl.innerHTML = '';
+  Object.keys(RECIPES).forEach(key=>{
+    const meal = RECIPES[key];
+    const tab = document.createElement('div');
+    tab.className = 'meal-tab' + (key===activeMealTab ? ' active':'');
+    tab.textContent = meal.label;
+    tab.onclick = () => { activeMealTab = key; renderRecipes(); };
+    tabsEl.appendChild(tab);
+
+    const panel = document.createElement('div');
+    panel.className = 'meal-panel' + (key===activeMealTab ? ' show':'');
+    panel.innerHTML = `<div style="font-size:12px; color:var(--ink-soft); font-weight:700; margin-bottom:10px;">${meal.target}</div>` +
+      meal.items.map(item => `
+        <div class="recipe-block">
+          <h5>${item.name}<span class="recipe-macros">${item.macro}</span></h5>
+          <table class="recipe-table">
+            ${item.portions.map(p=>`<tr><td>${p[0]}</td><td>${p[1]}</td></tr>`).join('')}
+          </table>
+          <div class="recipe-steps">${item.steps}</div>
+        </div>
+      `).join('');
+    panelsEl.appendChild(panel);
+  });
+}
+
+let state = null;
+
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+
+function defaultState(){
+  return {
+    startDate: todayStr(),
+    initialWeight: 94.4,
+    initialFat: 44.3,
+    xp: 0,
+    habitLog: {},
+    measurements: [
+      {date:'2026-02-19', weight:94.4, waist:null, fat:44.3}
+    ],
+    medicalChecklist: {},
+    badgesUnlocked: []
+  };
+}
+
+async function loadState(){
+  try{
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      state = JSON.parse(raw);
+    } else {
+      state = defaultState();
+    }
+  }catch(e){
+    state = defaultState();
+  }
+}
+
+async function saveState(){
+  try{
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }catch(e){
+    console.error('Error guardando', e);
+    showToast('⚠️ No se pudo guardar. Intenta de nuevo.');
+  }
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+function computeStreak(s){
+  let streak = 0;
+  let d = new Date();
+  while(true){
+    const ds = d.toISOString().slice(0,10);
+    const log = s.habitLog[ds];
+    const doneCount = log ? Object.values(log).filter(v=>v===true).length : 0;
+    if(doneCount >= 3){
+      streak++;
+      d.setDate(d.getDate()-1);
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
+
+function pctLoss(s){
+  if(!s.measurements.length) return 0;
+  const latest = s.measurements[s.measurements.length-1];
+  return ((s.initialWeight - latest.weight) / s.initialWeight) * 100;
+}
+
+function currentPhaseIndex(s){
+  const start = new Date(s.startDate);
+  const now = new Date();
+  const days = Math.floor((now-start)/(1000*60*60*24));
+  if(days < 28) return 0;
+  if(days < 84) return 1;
+  return 2;
+}
+
+function renderHero(){
+  const start = new Date(state.startDate);
+  const now = new Date();
+  const dayNum = Math.max(1, Math.floor((now-start)/(1000*60*60*24)) + 1);
+  document.getElementById('dayNum').textContent = Math.min(dayNum,180);
+
+  const level = Math.min(RANKS.length, Math.floor(state.xp / XP_PER_LEVEL) + 1);
+  const rankName = RANKS[level-1];
+  const xpIntoLevel = state.xp % XP_PER_LEVEL;
+  document.getElementById('rankName').textContent = rankName;
+  document.getElementById('leafFill').style.width = (xpIntoLevel/XP_PER_LEVEL*100) + '%';
+  document.getElementById('leafText').textContent = xpIntoLevel + ' / ' + XP_PER_LEVEL + ' 🍃 hojas · Nivel ' + level;
+
+  const streak = computeStreak(state);
+  document.getElementById('streakNum').textContent = streak;
+
+  const stampsEl = document.getElementById('stamps');
+  stampsEl.innerHTML = '';
+  for(let i=6;i>=0;i--){
+    const d = new Date();
+    d.setDate(d.getDate()-i);
+    const ds = d.toISOString().slice(0,10);
+    const log = state.habitLog[ds];
+    const doneCount = log ? Object.values(log).filter(v=>v===true).length : 0;
+    const s = document.createElement('div');
+    s.className = 'stamp' + (doneCount>=3 ? ' on':'');
+    s.textContent = doneCount>=3 ? '🌸' : '';
+    stampsEl.appendChild(s);
+  }
+}
+
+function renderTasks(){
+  const ds = todayStr();
+  if(!state.habitLog[ds]) state.habitLog[ds] = {};
+  const log = state.habitLog[ds];
+  const grid = document.getElementById('tasksGrid');
+  grid.innerHTML = '';
+  HABITS.forEach(h=>{
+    const checked = !!log[h.key];
+    const el = document.createElement('div');
+    el.className = 'task' + (checked?' checked':'');
+    el.innerHTML = `
+      <div class="task-icon">${h.icon}</div>
+      <div class="task-body">
+        <div class="task-title">${h.title}</div>
+        <div class="task-sub">${h.sub}</div>
+      </div>
+      <div class="task-leaf">+${h.xp} 🍃</div>
+    `;
+    el.onclick = () => toggleHabit(h.key, h.xp);
+    grid.appendChild(el);
+  });
+
+  const doneCount = Object.values(log).filter(v=>v===true).length;
+  document.getElementById('dayBanner').classList.toggle('show', doneCount >= 3);
+}
+
+function toggleHabit(key, xp){
+  const ds = todayStr();
+  if(!state.habitLog[ds]) state.habitLog[ds] = {};
+  const log = state.habitLog[ds];
+  const wasOn = !!log[key];
+  log[key] = !wasOn;
+  state.xp = Math.max(0, state.xp + (wasOn ? -xp : xp));
+
+  const doneCount = Object.values(log).filter(v=>v===true).length;
+  if(doneCount >= 3 && !log.__bonusGiven){
+    state.xp += 20;
+    log.__bonusGiven = true;
+    showToast('🌟 ¡Día completo! +20 hojas bonus');
+  } else if(doneCount < 3 && log.__bonusGiven){
+    state.xp = Math.max(0, state.xp - 20);
+    log.__bonusGiven = false;
+  }
+
+  saveState();
+  renderAll();
+}
+
+function renderWeek(){
+  const grid = document.getElementById('weekGrid');
+  grid.innerHTML = '';
+  const todayIdx = (new Date().getDay()+6)%7; // Mon=0
+  WEEK_PLAN.forEach((day, idx)=>{
+    const el = document.createElement('div');
+    el.className = 'day-tile' + (idx===todayIdx ? ' today':'');
+    el.innerHTML = `
+      <div class="dname">${day.d}</div>
+      <div class="dicon">${day.icon}</div>
+      <div class="ddur">${day.dur}</div>
+    `;
+    el.onclick = () => day.routine ? showRecipe(day.routine) : hideRecipe();
+    grid.appendChild(el);
+  });
+}
+
+function showRecipe(key){
+  const panel = document.getElementById('recipePanel');
+  const r = ROUTINES[key];
+  panel.innerHTML = `<div class="close-recipe" onclick="hideRecipe()">cerrar ✕</div><h4>${r.title}</h4><ul>${r.items.map(i=>'<li>'+i+'</li>').join('')}</ul>`;
+  panel.classList.add('show');
+}
+function hideRecipe(){
+  document.getElementById('recipePanel').classList.remove('show');
+}
+
+function addMeasurement(){
+  const date = document.getElementById('mDate').value || todayStr();
+  const weight = parseFloat(document.getElementById('mWeight').value);
+  const waist = parseFloat(document.getElementById('mWaist').value) || null;
+  const fat = parseFloat(document.getElementById('mFat').value) || null;
+  if(!weight || weight < 30 || weight > 250){
+    showToast('⚠️ Ingresa un peso válido');
+    return;
+  }
+  state.measurements.push({date, weight, waist, fat});
+  state.measurements.sort((a,b)=> a.date.localeCompare(b.date));
+  state.xp += 20;
+  document.getElementById('mWeight').value='';
+  document.getElementById('mWaist').value='';
+  document.getElementById('mFat').value='';
+  showToast('🌱 Medición registrada — +20 hojas');
+  saveState();
+  renderAll();
+}
+
+function renderChart(){
+  const svg = document.getElementById('chartSvg');
+  const ms = state.measurements;
+  if(ms.length < 1){ svg.innerHTML=''; return; }
+  const weights = ms.map(m=>m.weight);
+  const minW = Math.min(...weights) - 1;
+  const maxW = Math.max(...weights) + 1;
+  const W = 600, H = 140, pad = 10;
+  const xStep = ms.length > 1 ? (W-2*pad)/(ms.length-1) : 0;
+  const pts = ms.map((m,i)=>{
+    const x = pad + i*xStep;
+    const y = H - pad - ((m.weight-minW)/(maxW-minW||1))*(H-2*pad);
+    return [x,y];
+  });
+  let path = pts.map(p=>p.join(',')).join(' ');
+  let circles = pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="#F2966B"/>`).join('');
+  svg.innerHTML = `<polyline points="${path}" fill="none" stroke="#F2966B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${circles}`;
+}
+
+function renderLadder(){
+  const tbody = document.querySelector('#chestTable tbody');
+  const init = state.initialWeight;
+  const latest = state.measurements.length ? state.measurements[state.measurements.length-1].weight : init;
+  const targets = [
+    {label:'🥉 Mínima exitosa', pct:5},
+    {label:'🥈 Muy buena', pct:7},
+    {label:'🥇 Ambiciosa (6m)', pct:10},
+    {label:'🏆 Largo plazo', pct:15},
+    {label:'👑 Largo plazo +', pct:20},
+  ];
+  tbody.innerHTML = targets.map(t=>{
+    const target = init*(1-t.pct/100);
+    const hit = latest <= target;
+    return `<tr class="row ${hit?'hit':''}">
+      <td>${t.label}</td>
+      <td>${t.pct}%</td>
+      <td>${target.toFixed(1)} kg</td>
+      <td>${hit ? '🎁 ¡lograda!' : '—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderSeason(){
+  const idx = currentPhaseIndex(state);
+  const phases = [
+    {icon:'🌱', title:'Siembra', range:'Semanas 1–4', desc:'Construir el sistema, no maximizar la pérdida. 3 comidas estructuradas, 100–120g proteína, 2 fuerza + 3 cardio, 7–9h sueño.'},
+    {icon:'🌿', title:'Cultivo', range:'Semanas 5–12', desc:'Déficit consistente. 2–3 fuerza, 150–220 min aeróbico. Meta aproximada: acercarte a −5–7% del peso inicial.'},
+    {icon:'🌾', title:'Cosecha', range:'Meses 4–6', desc:'Más fuerza + más capacidad cardiovascular + pérdida continua. Meta ambiciosa: −10% del peso inicial, músculo preservado.'},
+  ];
+  const grid = document.getElementById('seasonGrid');
+  grid.innerHTML = phases.map((p,i)=>`
+    <div class="season-card ${i===idx?'active':''}">
+      ${i===idx?'<div class="season-badge">ACTUAL</div>':''}
+      <div class="season-eyebrow">${p.icon} ${p.range}</div>
+      <div class="season-title display">${p.title}</div>
+      <div class="season-desc">${p.desc}</div>
+    </div>
+  `).join('');
+}
+
+function renderBadgesAndIsland(){
+  const grid = document.getElementById('badgeGrid');
+  grid.innerHTML = '';
+  let unlockedCount = 0;
+  const scene = document.getElementById('islandScene');
+  // remove old decor nodes (keep .island-land)
+  scene.querySelectorAll('.decor').forEach(n=>n.remove());
+
+  BADGE_DEFS.forEach(b=>{
+    const unlocked = b.check(state);
+    if(unlocked) unlockedCount++;
+    if(unlocked && !state.badgesUnlocked.includes(b.id)){
+      state.badgesUnlocked.push(b.id);
+    }
+    const el = document.createElement('div');
+    el.className = 'badge' + (unlocked ? ' unlocked':'');
+    el.innerHTML = `<div class="b-icon">${b.icon}</div><div class="b-name">${b.name}</div>`;
+    grid.appendChild(el);
+
+    if(unlocked && b.decor){
+      const d = document.createElement('div');
+      d.className = 'decor';
+      d.style.top = b.decor.top;
+      d.style.left = b.decor.left;
+      d.textContent = b.decor.emoji;
+      scene.appendChild(d);
+      requestAnimationFrame(()=> setTimeout(()=> d.classList.add('show'), 60));
+    }
+  });
+
+  const caption = document.getElementById('islandCaption');
+  if(unlockedCount === 0){
+    caption.textContent = 'Tu isla apenas está despertando. Completa tu primera tarea para plantar la primera semilla 🌱';
+  } else if(unlockedCount < 4){
+    caption.textContent = `Tu isla está brotando 🌱 — ${unlockedCount} de ${BADGE_DEFS.length} medallas desbloqueadas.`;
+  } else if(unlockedCount < 8){
+    caption.textContent = `Tu isla está floreciendo 🌸 — ${unlockedCount} de ${BADGE_DEFS.length} medallas desbloqueadas.`;
+  } else if(unlockedCount < BADGE_DEFS.length){
+    caption.textContent = `Tu isla luce hermosa 🌳 — ${unlockedCount} de ${BADGE_DEFS.length} medallas desbloqueadas.`;
+  } else {
+    caption.textContent = `¡Tu isla está en plena cosecha! 🎉 Has desbloqueado todas las medallas.`;
+  }
+}
+
+const MED_ITEMS = [
+  {key:'tsh', text:'TSH + T4 libre (por TMB bajo)'},
+  {key:'ferritin', text:'Ferritina, hemoglobina, saturación transferrina'},
+  {key:'iron_cause', text:'Investigar causa de deficiencia de hierro'},
+  {key:'hba1c', text:'HbA1c + glucosa en ayunas'},
+  {key:'homa', text:'Perfil lipídico + presión arterial'},
+  {key:'sleep_apnea', text:'Preguntar por apnea del sueño (si ronca/somnolencia)'},
+  {key:'pharma', text:'Conversar sobre farmacoterapia para obesidad (IMC 32.7)'},
+  {key:'psych', text:'Revisar con psiquiatra: peso y duloxetina'},
+];
+
+function renderMedical(){
+  const list = document.getElementById('medList');
+  list.innerHTML = '';
+  MED_ITEMS.forEach(item=>{
+    const checked = !!state.medicalChecklist[item.key];
+    const el = document.createElement('div');
+    el.className = 'med-item' + (checked?' checked':'');
+    el.innerHTML = `<div class="med-check"></div><div class="med-text">${item.text}</div>`;
+    el.onclick = ()=>{
+      state.medicalChecklist[item.key] = !checked;
+      saveState();
+      renderAll();
+    };
+    list.appendChild(el);
+  });
+}
+
+function renderAll(){
+  renderHero();
+  renderTasks();
+  renderWeek();
+  renderChart();
+  renderLadder();
+  renderSeason();
+  renderBadgesAndIsland();
+  renderMedical();
+}
+
+async function exportData(){
+  const dataStr = JSON.stringify(state, null, 2);
+  const blob = new Blob([dataStr], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'mi-isla-datos.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function resetData(){
+  document.getElementById('resetOverlay').classList.add('show');
+}
+
+async function confirmReset(){
+  state = defaultState();
+  await saveState();
+  renderAll();
+  document.getElementById('resetOverlay').classList.remove('show');
+  showToast('🏝️ Isla reiniciada');
+}
+
+function cancelReset(){
+  document.getElementById('resetOverlay').classList.remove('show');
+}
+
+async function init(){
+  document.getElementById('mDate').value = todayStr();
+  renderRecipes();
+  await loadState();
+  renderAll();
+  document.getElementById('loading').style.display='none';
+  document.getElementById('app').style.display='block';
+}
+
+init();
+</script>
+
+</body>
+</html>
